@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Docker Compose 实践</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 { color: #667eea; }
+        .success { 
+            color: #28a745; 
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .service {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .api-test {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .api-test:hover {
+            background: #218838;
+        }
+        #api-response {
+            background: #2d2d2d;
+            color: #00ff00;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Docker Compose 多服务实践</h1>
+        <p class="success">✓ 两个容器协同工作</p>
+        
+        <div class="service">
+            <strong>📦 Web 服务 (Nginx)</strong><br>
+            端口：8080 → 80<br>
+            镜像：nginx:alpine
+        </div>
+        
+        <div class="service">
+            <strong>🐍 API 服务 (Flask)</strong><br>
+            端口：5000 → 5000<br>
+            镜像：自定义构建
+        </div>
+        
+        <button class="api-test" onclick="testAPI()">
+            🚀 测试 API 服务
+        </button>
+        
+        <div id="api-response"></div>
+    </div>
+    
+    <script>
+        async function testAPI() {
+            const responseDiv = document.getElementById('api-response');
+            responseDiv.style.display = 'block';
+            responseDiv.innerHTML = '正在请求 API...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/');
+                const data = await response.json();
+                responseDiv.innerHTML = '<strong>✅ API 响应成功!</strong>\n\n' + 
+                    JSON.stringify(data, null, 2);
+            } catch (error) {
+                responseDiv.innerHTML = '<strong>❌ 请求失败:</strong>\n' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
